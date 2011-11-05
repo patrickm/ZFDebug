@@ -49,7 +49,8 @@ class ZFDebug_Controller_Plugin_Debug extends Zend_Controller_Plugin_Abstract
             'Variables' => null,
             'Time' => null,
             'Memory' => null),
-        'image_path'        => null
+        'image_path'        => null,
+        'static_path'        => '/ZFDebug/'
     );
     
     /**
@@ -154,6 +155,11 @@ class ZFDebug_Controller_Plugin_Debug extends Zend_Controller_Plugin_Abstract
         if (isset($options['plugins'])) {
             $this->_options['plugins'] = $options['plugins'];
         }
+
+        if (isset($options['static_path'])) {
+            $this->_options['static_path'] = $options['static_path'];
+        }
+
         return $this;
     }
 
@@ -407,125 +413,8 @@ class ZFDebug_Controller_Plugin_Debug extends Zend_Controller_Plugin_Abstract
      */
     protected function _headerOutput() 
     {
-        $collapsed = isset($_COOKIE['ZFDebugCollapsed']) ? $_COOKIE['ZFDebugCollapsed'] : '';
-        if ($collapsed) {
-            $boxheight = isset($_COOKIE['ZFDebugHeight']) ? $_COOKIE['ZFDebugHeight'] : '240';
-        } else {
-            $boxheight = '32';
-        }
-        return ('
-    <style type="text/css" media="screen">
-        html,body {height:100%}
-        #ZFDebug, #ZFDebug div, #ZFDebug span, #ZFDebug h1, #ZFDebug h2, #ZFDebug h3, #ZFDebug h4, #ZFDebug h5, #ZFDebug h6, #ZFDebug p, #ZFDebug blockquote, #ZFDebug pre, #ZFDebug a, #ZFDebug code, #ZFDebug em, #ZFDebug img, #ZFDebug strong, #ZFDebug dl, #ZFDebug dt, #ZFDebug dd, #ZFDebug ol, #ZFDebug ul, #ZFDebug li, #ZFDebug table, #ZFDebug tbody, #ZFDebug tfoot, #ZFDebug thead, #ZFDebug tr, #ZFDebug th, #ZFDebug td {
-        	margin: 0;
-        	padding: 0;
-        	border: 0;
-        	outline: 0;
-        	font-size: 100%;
-        	vertical-align: baseline;
-        	background: transparent;
-        	}
-        
-        #ZFDebug_offset {height:'.$boxheight.'px}
-        #ZFDebug {height:'.$boxheight.'px; width:100%; background:#262626; 
-                        font: 12px/1.4em Lucida Grande, Lucida Sans Unicode, sans-serif; 
-                        position:fixed; bottom:0px; left:0px; color:#FFF; background:#000000;
-                        z-index:2718281828459045;}
-        #ZFDebug p {margin:1em 0}
-        #ZFDebug a {color:#FFFFFF}
-        #ZFDebug tr {color:#FFFFFF;}
-        #ZFDebug td {vertical-align:top; padding-bottom:1em}
-        #ZFDebug ol {margin:1em 0 0 0; padding:0; list-style-position: inside;}
-        #ZFDebug li {margin:0;}
-        #ZFDebug .clickable {cursor:pointer}
-        #ZFDebug #ZFDebug_info {display:block; height:32px;
-                       background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAyCAMAAABSxbpPAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAACFQTFRFFhYWIyMjGhoaHBwcJSUlExMTFBQUHx8fISEhGBgYJiYmWIZXxwAAAC5JREFUeNrsxskNACAMwLBAucr+A/OLWAEJv0wXQ1xSVBFiiiWKaGLr96EeAQYA2KMRY8RL/qEAAAAASUVORK5CYII=) }
-        #ZFDebug #ZFDebugResize {cursor:row-resize; height:1px; border-top:1px solid #1a1a1a;border-bottom:1px solid #333333; }
-        #ZFDebug .ZFDebug_span {padding:0 15px; line-height:32px; display:block; float:left}
-        #ZFDebug .ZFDebug_panel {padding:0px 15px 15px 15px;
-                        font: 11px/1.4em Menlo, Monaco, Lucida Console, monospace;
-                        text-align:left; height:'.($boxheight-50).'px; overflow:auto; display:none; }
-        #ZFDebug h4 {font:bold 12px/1.4em Menlo, Monaco, Lucida Console, monospace; margin:1em 0;}
-        #ZFDebug .ZFDebug_active {background:#1a1a1a;}
-        #ZFDebug .ZFDebug_panel .pre {margin:0 0 0 22px}
-        #ZFDebug_exception { border:1px solid #CD0A0A;display: block; }
-    </style>
-    <script type="text/javascript">
-        var ZFDebugLoad = window.onload;
-        window.onload = function(){
-            if (ZFDebugLoad) {
-                ZFDebugLoad();
-            }
-            if ("'.$collapsed.'" != "") {
-                ZFDebugPanel("' . $collapsed . '");
-            }
-            window.zfdebugHeight = "'.(isset($_COOKIE['ZFDebugHeight']) ? $_COOKIE['ZFDebugHeight'] : '240').'";
-            
-            document.onmousemove = function(e) {
-                var event = e || window.event;
-                window.zfdebugMouse = Math.max(40, Math.min(window.innerHeight, -1*(event.clientY-window.innerHeight-32)));
-            }
-            
-            var ZFDebugResizeTimer = null;
-            document.getElementById("ZFDebugResize").onmousedown=function(e){
-                ZFDebugResize();
-                ZFDebugResizeTimer = setInterval("ZFDebugResize()",50);
-                return false;
-            }
-            document.onmouseup=function(e){
-                clearTimeout(ZFDebugResizeTimer);
-            }
-        };
-        
-        function ZFDebugResize()
-        {
-            window.zfdebugHeight = window.zfdebugMouse;
-            document.cookie = "ZFDebugHeight="+window.zfdebugHeight+";expires=;path=/";
-            document.getElementById("ZFDebug").style.height = window.zfdebugHeight+"px";
-            document.getElementById("ZFDebug_offset").style.height = window.zfdebugHeight+"px";
-            
-            var panels = document.getElementById("ZFDebug").children;
-            for (var i=0; i < document.getElementById("ZFDebug").childElementCount; i++) {
-                if (panels[i].className.indexOf("ZFDebug_panel") == -1)
-                    continue;
-                
-                panels[i].style.height = window.zfdebugHeight-50+"px";
-            }
-        }
-    
-        var ZFDebugCurrent = null;
-    
-        function ZFDebugPanel(name) {
-            if (ZFDebugCurrent == name) {
-                document.getElementById("ZFDebug").style.height = "32px";
-                document.getElementById("ZFDebug_offset").style.height = "32px";
-                ZFDebugCurrent = null;
-                document.cookie = "ZFDebugCollapsed=;expires=;path=/";
-            } else {
-                document.getElementById("ZFDebug").style.height = window.zfdebugHeight+"px";
-                document.getElementById("ZFDebug_offset").style.height = window.zfdebugHeight+"px";
-                ZFDebugCurrent = name;
-                document.cookie = "ZFDebugCollapsed="+name+";expires=;path=/";
-            }
-
-            var panels = document.getElementById("ZFDebug").children;
-            for (var i=0; i < document.getElementById("ZFDebug").childElementCount; i++) {
-                if (panels[i].className.indexOf("ZFDebug_panel") == -1)
-                    continue;
-                
-                if (ZFDebugCurrent && panels[i].id == name) {
-                    document.getElementById("ZFDebugInfo_"+name.substring(8)).className += " ZFDebug_active";
-                    panels[i].style.display = "block";
-                    panels[i].style.height = (window.zfdebugHeight-50)+"px";
-                } else {
-                    var element = document.getElementById("ZFDebugInfo_"+panels[i].id.substring(8));
-                    element.className = element.className.replace("ZFDebug_active", "");
-                    panels[i].style.display = "none";
-                }
-            }
-        }
-    </script>
-    ');
+        return ('<script type="text/javascript" src="' . $this->_options['static_path'] . 'zfdebug.js"></script>
+				<link rel="stylesheet" href="' . $this->_options['static_path'] . 'zfdebug.css" media="screen, projection" />');
     }
 
     /**
