@@ -50,7 +50,12 @@ function ZFDebugResize()
 var ZFDebugCurrent = null;
 
 function ZFDebugPanel(name) {
-	if (ZFDebugCurrent == name) {
+	if (name == 'close' && ZFDebugCurrent === null) {
+		document.getElementById("ZFDebug").style.display = "none";
+		document.getElementById("ZFDebug_offset").style.display = "none";
+		return;
+	}
+	if (name == 'close' || ZFDebugCurrent == name) {
 		document.getElementById("ZFDebug").style.height = "32px";
 		document.getElementById("ZFDebug_offset").style.height = "32px";
 		ZFDebugCurrent = null;

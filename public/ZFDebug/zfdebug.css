@@ -22,6 +22,7 @@ html,body {height:100%}
 
 #ZFDebug #ZFDebugResize {cursor:row-resize; height:1px; border-top:1px solid #1a1a1a;border-bottom:1px solid #333333; }
 #ZFDebug .ZFDebug_span {padding:0 15px; line-height:32px; display:block; float:left}
+#ZFDebug .ZFDebug_span.close {cursor:pointer}
 #ZFDebug .ZFDebug_panel {padding:0px 15px 15px 15px; font: 11px/1.4em Menlo, Monaco, Lucida Console, monospace; text-align:left; height:0; overflow:auto; display:none; }
 #ZFDebug h4 {font:bold 12px/1.4em Menlo, Monaco, Lucida Console, monospace; margin:1em 0;}
 #ZFDebug .ZFDebug_active {background:#1a1a1a;}
