@@ -91,7 +91,7 @@ class ZFDebug_Controller_Plugin_Debug_Plugin_Cache
     {
         $panel = '';
         
-        $linebreak = $this->getLinebreak();
+        $linebreak = "<br>";
 
         # Support for APC
         if (function_exists('apc_sma_info') && ini_get('apc.enabled')) {

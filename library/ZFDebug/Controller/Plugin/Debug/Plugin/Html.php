@@ -83,13 +83,12 @@ class ZFDebug_Controller_Plugin_Debug_Plugin_Html
         $dom->loadHtml($body);
         libxml_use_internal_errors($liberrors);
         $panel = '<h4>HTML Information</h4>';
-        $panel .= $this->_isXhtml();
-        $linebreak = $this->getLinebreak();
+        $linebreak = "<br>";
         $panel .= $dom->getElementsByTagName('*')->length.' Tags in ' . round(strlen($body)/1024, 2).'K'.$linebreak
                 . $dom->getElementsByTagName('link')->length.' Link Tags'.$linebreak
                 . $dom->getElementsByTagName('script')->length.' Script Tags'.$linebreak
                 . $dom->getElementsByTagName('img')->length.' Images'.$linebreak
-                . '<form method="post" action="http://validator.w3.org/check"><p><input type="hidden" name="fragment" value="'.htmlentities($body).'"'.$this->getClosingBracket().'<input type="submit" value="Validate With W3C"'.$this->getClosingBracket().'</p></form>';
+                . '<form method="post" action="http://validator.w3.org/check"><p><input type="hidden" name="fragment" value="'.htmlentities($body).'"<br><input type="submit" value="Validate With W3C"<br></p></form>';
         return $panel;
     }
 }

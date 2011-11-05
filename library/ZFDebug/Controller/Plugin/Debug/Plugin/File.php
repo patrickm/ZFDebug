@@ -110,7 +110,7 @@ class ZFDebug_Controller_Plugin_Debug_Plugin_File
      */
     public function getPanel()
     {
-        $linebreak = $this->getLinebreak();
+        $linebreak = "<br>";
         $included = $this->_getIncludedFiles();
         $html = '<h4>' . count($included).' files included worth ';
         $size = 0;

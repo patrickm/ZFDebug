@@ -164,8 +164,8 @@ class ZFDebug_Controller_Plugin_Debug_Plugin_Time
                         continue;
                     }
                     $stats = ' – avg ' . $this->_calcAvg($data) . 'ms/'.count($data).' requests';
-                    // $html = 'Min: ' . round(min($data), 2) . ' ms'.$this->getLinebreak();
-                    // $html .= 'Max: ' . round(max($data), 2) . ' ms'.$this->getLinebreak();
+                    // $html = 'Min: ' . round(min($data), 2) . ' ms<br>';
+                    // $html .= 'Max: ' . round(max($data), 2) . ' ms<br>';
                 }
             }
         }
@@ -214,30 +214,5 @@ class ZFDebug_Controller_Plugin_Debug_Plugin_Time
 
         $cuantos = count($array);
         return round(array_sum($array) / $cuantos, $precision);
-    }
-    
-    public function getLinebreak()
-    {
-        return '<br'.$this->getClosingBracket();
-    }
-
-    public function getClosingBracket()
-    {
-        if (!$this->_closingBracket) {
-            if ($this->_isXhtml()) {
-                $this->_closingBracket = ' />';
-            } else {
-                $this->_closingBracket = '>';
-            }
-        }
-
-        return $this->_closingBracket;
-    }  
-    
-    protected function _isXhtml()
-    {
-        $view = Zend_Controller_Action_HelperBroker::getStaticHelper('viewRenderer')->view;
-        $doctype = $view->doctype();
-        return $doctype->isXhtml();
     }
 }
