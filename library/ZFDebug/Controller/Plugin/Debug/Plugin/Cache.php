@@ -127,7 +127,9 @@ class ZFDebug_Controller_Plugin_Debug_Plugin_Cache
                     . round($cache['num_hits'] * 100 / ($cache['num_hits'] + $cache['num_misses']), 1) . '%)' 
                     . $linebreak
                     . $cache['expunges'] . ' Expunges (cache full count)'; 
-        }
+        } else {
+			$panel .= "<h4>No APC support</h4>";
+		}
 
         foreach ($this->_cacheBackends as $name => $backend) {
             $fillingPercentage = $backend->getFillingPercentage();
@@ -150,6 +152,11 @@ class ZFDebug_Controller_Plugin_Debug_Plugin_Cache
             }
             $panel .= 'Valid Cache Size: ' . round($cacheSize/1024, 1) . 'K';
         }
+
+		if (count($this->_cacheBackends) == 0) {
+			$panel .= "<h4>No caching backends found!</h4>";
+		}
+
         return $panel;
     }
 }
