@@ -229,9 +229,7 @@ class ZFDebug_Controller_Plugin_Debug extends Zend_Controller_Plugin_Abstract
         $html = '';
 
         $html .= "<div id='ZFDebug_info'>\n";
-        $html .= "\t<span class='ZFDebug_span close' style='padding-right:0px;' onclick='ZFDebugPanel(\"close\");'>
-            <img style='vertical-align:middle;' src='".$this->_icon('close')."'>&nbsp;
-        </span>\n";
+        $html .= "\t<span class='ZFDebug_span close' style='padding-right:0px;' onclick='ZFDebugPanel(\"close\");'></span>\n";
 
         /**
          * Creating panel content for all registered plugins
